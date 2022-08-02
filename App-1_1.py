@@ -32,7 +32,7 @@ def button(message):
     if len(finded_users)==0:
         db.insert({'id': message.from_user.id })
     markup = types.InlineKeyboardMarkup(row_width=2)
-    item = types.InlineKeyboardButton('Нужна помошь', callback_data='need')
+    item = types.InlineKeyboardButton('Нужна помощь', callback_data='need')
     item2 = types.InlineKeyboardButton('Хочу помочь', callback_data='want')
     markup.add(item, item2)
     msg = bot.send_message(message.chat.id, 'Здравствуйте! Вы попали в бота министерства образования Республики Казахстан, он создан для помощи людям.\nПожалуйства выберите, что вы хотите сделать: ', reply_markup=markup)
