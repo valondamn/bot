@@ -35,7 +35,7 @@ def button(message):
     item = types.InlineKeyboardButton('Нужна помощь', callback_data='need')
     item2 = types.InlineKeyboardButton('Хочу помочь', callback_data='want')
     markup.add(item, item2)
-    msg = bot.send_message(message.chat.id, 'Здравствуйте! Вы попали в бота министерства образования Республики Казахстан, он создан для помощи людям.\nПожалуйства выберите, что вы хотите сделать: ', reply_markup=markup)
+    msg = bot.send_message(message.chat.id, 'Здравствуйте! Вы попали в бота министерства просвещения Республики Казахстан под названием "Дорога в школу", он создан для помощи людям.\nПожалуйства выберите, что вы хотите сделать: ', reply_markup=markup)
     
 @bot.message_handler(content_types="web_app_data") #получаем отправленные данные 
 def answer(webAppMes):
