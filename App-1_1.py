@@ -32,18 +32,24 @@ def button(message):
     if len(finded_users)==0:
         db.insert({'id': message.from_user.id })
     markup = types.InlineKeyboardMarkup(row_width=2)
-    item = types.InlineKeyboardButton('Нужна помощь', callback_data='need')
+    item = types.InlineKeyboardButton('Нужна помозщь', callback_data='need')
     item2 = types.InlineKeyboardButton('Хочу помочь', callback_data='want')
     markup.add(item, item2)
     msg = bot.send_message(message.chat.id, 'Здравствуйте! Вы попали в бота министерства просвещения Республики Казахстан под названием "Дорога в школу", он создан для помощи людям.\nПожалуйства выберите, что вы хотите сделать: ', reply_markup=markup)
     
 @bot.message_handler(content_types="web_app_data") #получаем отправленные данные 
 def answer(webAppMes):
-   print(webAppMes) #вся информация о сообщении
-   print(webAppMes.web_app_data.data) #конкретно то что мы передали в бота
-   bot.send_message(webAppMes.chat.id,  "Спасибо за предстваленную вами информацию! С вами обязательно свяжутся для оказания помощи! ")
-   webdatamessage = webAppMes.web_app_data.data
-   #отправляем сообщение в ответ на отправку данных из веб-приложения 
+    finded_users=db.search(query.id == webAppMes.from_user.id)
+    user=finded_users[0]
+    if user['thing'] == "Хочу помочь":
+        bot.send_message(webAppMes.chat.id,  "Спасибо за предстваленную вами информацию. С вами обязательно свяжутся!")
+    elif user['thing'] == "Нужна помощь":
+        bot.send_message(webAppMes.chat.id,  "Спасибо за предстваленную вами информацию. С вами обязательно свяжутся для оказания помощи! ")
+                    
+    print(webAppMes) #вся информация о сообщении
+    print(webAppMes.web_app_data.data) #конкретно то что мы передали в бота
+    webdatamessage = webAppMes.web_app_data.data
+    #отправляем сообщение в ответ на отправку данных из веб-приложения 
 
 @bot.callback_query_handler(func=lambda call: True)
 def callback(call):
@@ -61,7 +67,7 @@ def callback(call):
         bot.register_next_step_handler(mesg,number)
 
     if call.data =="want": 
-        bot.send_message(call.from_user.id, 'Пожалуйства выберите школу!', reply_markup=webAppKeyboard()) 
+        bot.send_message(call.from_user.id, 'Пожалуйства выберите школу:', reply_markup=webAppKeyboard1()) 
 
         
     #________________________________________________
@@ -219,7 +225,7 @@ def step4(message,child_num):
         markup.add(item, item2 )
         msg = bot.send_message(message.chat.id, f"{child_msg}\nПол:", reply_markup=markup)
     else:
-        bot.send_message( message.chat.id, 'Пожалуйства выберите школу!', reply_markup=webAppKeyboard()) 
+        bot.send_message( message.chat.id, 'Пожалуйства выберите школу:', reply_markup=webAppKeyboard()) 
 
 def webAppKeyboard(): #создание клавиатуры с webapp кнопкой
    keyboard = types.ReplyKeyboardMarkup(row_width=1) #создаем клавиатуру
@@ -229,6 +235,14 @@ def webAppKeyboard(): #создание клавиатуры с webapp кноп�
 
    return keyboard #возвращаем клавиатуру
 
+
+def webAppKeyboard1(): #создание клавиатуры с webapp кнопкой
+   keyboard = types.ReplyKeyboardMarkup(row_width=1) #создаем клавиатуру
+   webAppTest = types.WebAppInfo("https://trusting-difficult-collision.glitch.me/") #создаем webappinfo - формат хранения url
+   one_butt = types.KeyboardButton(text="Выбрать школу...", web_app=webAppTest) #создаем кнопку типа webapp
+   keyboard.add(one_butt) #добавляем кнопки в клавиатуру
+
+   return keyboard #возвращаем клавиатуру
     
 
 
